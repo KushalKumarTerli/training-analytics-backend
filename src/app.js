@@ -1,17 +1,20 @@
-const express = require('express') 
-const db = require('./config/db'); // important: initializes DB connection
+const express = require('express');
+const db = require('./config/db'); // DB connection initialized
 
-const healthroutes = require('./routes/health.routes'); //import health routes
+const healthroutes = require('./routes/health.routes');
 
-const  app = express();
+const  syncRoutes = require('./routes/sync.routes');
 
-app.use(express.json())
-app.use('/health', healthroutes); //use health routes
+const app = express();
 
-// Root endpoint
+app.use(express.json());
+
+app.use('/health', healthroutes);
+
+app.use('/sync', syncRoutes);
 
 app.get("/", (req, res) => {
-    res.send({message: "Training Analytics Backend is running" });
-})
+    res.send({ message: "Training Analytics Backend is running" });
+});
 
 module.exports = app;

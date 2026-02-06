@@ -1,9 +1,13 @@
-const app  = require('./app');
+const app = require("./app");
+const { initDB } = require("./config/db");
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, ()=> {
-    console.log(`server is running on port ${port}`);
+// Initialize DB & schema
+initDB();
 
-})
+app.listen(port, () => {
+    console.log(`🚀 Server is running on port ${port}`);
+});
+
 

@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS trainees (
 -- 2. TRAINEE PERFORMANCE SUMMARY
 -- =========================
 CREATE TABLE IF NOT EXISTS trainee_performance_summary (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  employee_id TEXT,
+  employee_id TEXT PRIMARY KEY,
+
 
   training_months TEXT,
   current_learning TEXT,
@@ -60,8 +60,8 @@ CREATE TABLE IF NOT EXISTS trainee_performance_summary (
   online_demos_instructor_count INTEGER,
   online_demos_instructor_avg_rating REAL,
 
-  online_demos_evaluator_count INTEGER,
-  online_demos_evaluator_avg_rating REAL,
+  online_demos_instructor_platform_count INTEGER,
+  online_demos_instructor_platform_avg_rating REAL,
 
   offline_demos_count INTEGER,
   offline_demos_avg_rating REAL,
