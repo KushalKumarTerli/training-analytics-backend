@@ -1,0 +1,98 @@
+// ================= TRAINEE DETAILS =================
+const traineeDetailsMapping = {
+  "Employee Full Name": "employee_full_name",
+  "Employee ID": "employee_id",
+  "Contact Number": "contact_number",
+  "Manager": "manager_name",
+  "UID": "uid",
+  "Working status": "working_status",
+  "Employment Type": "employment_type",
+  "Work place": "work_place",
+  "Program": "program",
+  "Role": "role",
+  "Personal Mail ID": "personal_email",
+  "Company Mail ID": "company_email",
+  "DOJ": "doj",
+  "Qualification": "qualification",
+  "Year of Passout": "year_of_passout",
+  "Home State": "home_state",
+  "Specialization": "specialization",
+  "Have M.Tech PC": "has_mtech_pc",
+  "Have M.Tech OD": "has_mtech_od",
+  "CTC": "ctc",
+  "Learning Portal Access": "learning_portal_access",
+  "Last working day": "last_working_day",
+  "Month Of Resignation": "resignation_month",
+  "Type Of Exit": "exit_type",
+  "Exit Bucket": "exit_bucket",
+  "Indetailed Explantion For Exit": "exit_explanation",
+  "Employee Contribution": "employee_contribution",
+  "Deployment Status": "deployment_status",
+  "Deployment Date": "deployment_date",
+  "Deployment Month": "deployment_month"
+};
+
+// ================= TRAINEE PERFORMANCE =================
+const traineePerformanceMapping = {
+  "Employee ID": "employee_id",
+  "Training Months": "training_months",
+  "Current learning": "current_learning",
+  "Completed courses": "completed_courses",
+  "Online demos Instructor platform count": "online_demos_instructor_platform_count",
+  "Online demos Instructor platform Avg ratings": "online_demos_instructor_platform_avg_rating",
+  "Online Demos Evaluation Count": "online_demos_instructor_count",
+  "Online Demos Evaluation Average Rating": "online_demos_instructor_avg_rating",
+  "Offline demos count": "offline_demos_count",
+  "Offline demos Avg rating": "offline_demos_avg_rating",
+  "Fortnight exams count": "fortnight_exam_count",
+  "Fortnight exams score avg": "fortnight_exam_avg_score",
+  "Course exams count": "course_exam_count",
+  "Course exam score avg": "course_exam_avg_score",
+  "Average of Course Exam+Fortnight": "combined_exam_avg_score"
+};
+
+// ================= DEMO SESSIONS =================
+const demoSessionsMapping = {
+  "Instructor User ID": "uid",
+  "Instructor Name": "instructor_name",
+  "Demo Date (YYYY-MM-DD)": "demo_date",
+  "Demo Time": "demo_time",
+  "Demo Status": "demo_status",
+  "Course ID": "course_id",
+  "Course Name": "course_name",
+  "Topic ID": "topic_id",
+  "Topic Name": "topic_name",
+  "Remarks": "remarks",
+  "Panel Members": "panel_members",
+  "Avg From Dropdowns": "avg_rating",
+  "Greeting & Warmth": "greeting_warmth",
+  "Recap": "recap",
+  "Agenda Setting": "agenda_setting",
+  "Slide Usage": "slide_usage",
+  "Transition between concepts": "transition_between_concepts",
+  "Content Familiarity": "content_familiarity",
+  "Key concepts covered": "key_concepts_covered",
+  "Usage of relevant examples": "usage_of_examples",
+  "Accuracy of information": "accuracy_of_information",
+  "Hands-on Coding": "hands_on_coding",
+  "Problem-Solving Approach": "problem_solving_approach",
+  "Time Management": "time_management",
+  "Pace of Delivery": "pace_of_delivery",
+  "Slide Transitions/Flow": "slide_transitions_flow",
+  "Voice modulation": "voice_modulation",
+  "Language clarity": "language_clarity",
+  "Body Language": "body_language",
+  "Fluency": "fluency",
+  "Interactive Engagement": "interactive_engagement",
+  "Encourages Participation": "encourages_participation",
+  "Session closure": "session_closure",
+  "Grooming & Dressing": "grooming_dressing",
+  "Classroom behaviour": "classroom_behaviour",
+  "Openness to feedback": "openness_to_feedback"
+};
+
+module.exports = {
+  traineeDetailsMapping,
+  traineePerformanceMapping,
+  demoSessionsMapping
+};

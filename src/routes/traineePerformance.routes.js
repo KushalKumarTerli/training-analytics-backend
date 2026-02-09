@@ -1,14 +1,18 @@
 const express = require('express');
 const router = express.Router();
-//importing Data sanitizers
+
+const { traineePerformanceMapping } = require("../utils/headerMappings");
+const { transformRow } = require("../utils/transformRow");
+
 const {
   toNull,
   toNumberOrNull
 } = require('../utils/sanitizers');
-//importing trainee performance service for DB operations
+
 const { upsertTraineePerformance } = require('../services/traineePerformance.service');
 
 console.log("trainee performance route triggered");
+
 router.post("/", async (req, res) => {
 
   const rows = req.body;
@@ -29,54 +33,67 @@ router.post("/", async (req, res) => {
   let failure = 0;
 
   for (const row of rows) {
+
     try {
-      const cleanRow = { //data sanitization
-            employee_id: row.employee_id,
 
-            training_months: toNull(row.training_months),
-            current_learning: toNull(row.current_learning),
-            completed_courses: toNull(row.completed_courses),
+      // STEP 1: Map sheet headers → DB column names
+      const mappedRow = transformRow(row, traineePerformanceMapping);
 
-            online_demos_instructor_count:
-                toNumberOrNull(row.online_demos_instructor_count),
+      if (!mappedRow.employee_id) {
+        failure++;
+        console.error("Missing employee_id after mapping");
+        continue;
+      }
 
-            online_demos_instructor_avg_rating:
-                toNumberOrNull(row.online_demos_instructor_avg_rating),
+      // STEP 2: Sanitize
+      const cleanRow = {
 
-            online_demos_instructor_platform_count:
-                toNumberOrNull(row.online_demos_instructor_platform_count),
+        employee_id: mappedRow.employee_id,
 
-            online_demos_instructor_platform_avg_rating:
-                toNumberOrNull(row.online_demos_instructor_platform_avg_rating),
+        training_months: toNull(mappedRow.training_months),
+        current_learning: toNull(mappedRow.current_learning),
+        completed_courses: toNull(mappedRow.completed_courses),
 
-            offline_demos_count:
-                toNumberOrNull(row.offline_demos_count),
+        online_demos_instructor_count:
+          toNumberOrNull(mappedRow.online_demos_instructor_count),
 
-            offline_demos_avg_rating:
-                toNumberOrNull(row.offline_demos_avg_rating),
+        online_demos_instructor_avg_rating:
+          toNumberOrNull(mappedRow.online_demos_instructor_avg_rating),
 
-            fortnight_exam_count:
-                toNumberOrNull(row.fortnight_exam_count),
+        online_demos_instructor_platform_count:
+          toNumberOrNull(mappedRow.online_demos_instructor_platform_count),
 
-            fortnight_exam_avg_score:
-                toNumberOrNull(row.fortnight_exam_avg_score),
+        online_demos_instructor_platform_avg_rating:
+          toNumberOrNull(mappedRow.online_demos_instructor_platform_avg_rating),
 
-            course_exam_count:
-                toNumberOrNull(row.course_exam_count),
+        offline_demos_count:
+          toNumberOrNull(mappedRow.offline_demos_count),
 
-            course_exam_avg_score:
-                toNumberOrNull(row.course_exam_avg_score),
+        offline_demos_avg_rating:
+          toNumberOrNull(mappedRow.offline_demos_avg_rating),
 
-            combined_exam_avg_score:
-                toNumberOrNull(row.combined_exam_avg_score)
-        };
+        fortnight_exam_count:
+          toNumberOrNull(mappedRow.fortnight_exam_count),
 
-        await upsertTraineePerformance(cleanRow);
-       success++;
+        fortnight_exam_avg_score:
+          toNumberOrNull(mappedRow.fortnight_exam_avg_score),
+
+        course_exam_count:
+          toNumberOrNull(mappedRow.course_exam_count),
+
+        course_exam_avg_score:
+          toNumberOrNull(mappedRow.course_exam_avg_score),
+
+        combined_exam_avg_score:
+          toNumberOrNull(mappedRow.combined_exam_avg_score)
+      };
+
+      await upsertTraineePerformance(cleanRow);
+      success++;
 
     } catch (error) {
       failure++;
-      console.error("❌ Failed performance:", row.employee_id, error.message);
+      console.error("❌ Failed performance:", error.message);
     }
   }
 

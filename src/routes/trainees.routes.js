@@ -1,12 +1,17 @@
 const express = require('express');
 const router = express.Router();
-//importing Data sanitizers
+
+const { traineeDetailsMapping } = require("../utils/headerMappings");
+const { transformRow } = require("../utils/transformRow");
+
+// Data sanitizers
 const {
   toNull,
-  toNumberOrNull
+  toNumberOrNull,
+  toDateOrNull
 } = require('../utils/sanitizers');
 
-//importing trainee service for DB operations
+// DB service
 const { upsertTrainee } = require('../services/trainees.service');
 
 console.log("trainee route triggered");
@@ -27,57 +32,78 @@ router.post("/", async (req, res) => {
     });
   }
 
-  let success = 0;//counters for success and failure
+  let success = 0;
   let failure = 0;
 
   for (const row of rows) {
-    if (!row.employee_id) { //Because foreign key + primary key depend on this.
-            failure++;
-            console.error("Missing employee_id");
-            continue;
-        }
+
     try {
+
+      // 🔹 Step 1: Map Sheet Headers → DB Fields
+      const mappedRow = transformRow(row, traineeDetailsMapping);
+
+      if (!mappedRow.employee_id) {
+        failure++;
+        console.error("Missing employee_id after mapping");
+        continue;
+      }
+
+      // 🔹 Step 2: Sanitize Data
       const cleanRow = {
-            employee_id: row.employee_id,
-            employee_full_name: toNull(row.employee_full_name),
-            contact_number: toNull(row.contact_number),
-            manager_name: toNull(row.manager_name),
 
-            working_status: toNull(row.working_status),
-            employment_type: toNull(row.employment_type),
-            work_place: toNull(row.work_place),
-            program: toNull(row.program),
-            role: toNull(row.role),
+        // Identity
+        employee_id: mappedRow.employee_id,
+        employee_full_name: toNull(mappedRow.employee_full_name),
+        contact_number: toNull(mappedRow.contact_number),
+        manager_name: toNull(mappedRow.manager_name),
+        uid: toNull(mappedRow.uid),
 
-            personal_email: toNull(row.personal_email),
-            company_email: toNull(row.company_email),
+        // Employment
+        working_status: toNull(mappedRow.working_status),
+        employment_type: toNull(mappedRow.employment_type),
+        work_place: toNull(mappedRow.work_place),
+        program: toNull(mappedRow.program),
+        role: toNull(mappedRow.role),
 
-            doj: toDateOrNull(row.doj),
+        // Email
+        personal_email: toNull(mappedRow.personal_email),
+        company_email: toNull(mappedRow.company_email),
 
-            qualification: toNull(row.qualification),
-            year_of_passout: toNumberOrNull(row.year_of_passout),
-            home_state: toNull(row.home_state),
-            specialization: toNull(row.specialization),
+        // Education
+        doj: toDateOrNull(mappedRow.doj),
+        qualification: toNull(mappedRow.qualification),
+        year_of_passout: toNumberOrNull(mappedRow.year_of_passout),
+        home_state: toNull(mappedRow.home_state),
+        specialization: toNull(mappedRow.specialization),
 
-            has_mtech_pc: toNull(row.has_mtech_pc),
-            has_mtech_od: toNull(row.has_mtech_od),
+        has_mtech_pc: toNull(mappedRow.has_mtech_pc),
+        has_mtech_od: toNull(mappedRow.has_mtech_od),
 
-            ctc: toNumberOrNull(row.ctc),
-            learning_portal_access: toNull(row.learning_portal_access),
+        ctc: toNumberOrNull(mappedRow.ctc),
+        learning_portal_access: toNull(mappedRow.learning_portal_access),
 
-            deployment_status: toNull(row.deployment_status),
-            deployment_date: toDateOrNull(row.deployment_date),
-            deployment_month: toNull(row.deployment_month)
-          };
+        // Exit Info
+        last_working_day: toDateOrNull(mappedRow.last_working_day),
+        resignation_month: toNull(mappedRow.resignation_month),
+        exit_type: toNull(mappedRow.exit_type),
+        exit_bucket: toNull(mappedRow.exit_bucket),
+        exit_explanation: toNull(mappedRow.exit_explanation),
+        employee_contribution: toNull(mappedRow.employee_contribution),
+
+        // Deployment
+        deployment_status: toNull(mappedRow.deployment_status),
+        deployment_date: toDateOrNull(mappedRow.deployment_date),
+        deployment_month: toNull(mappedRow.deployment_month)
+      };
 
       await upsertTrainee(cleanRow);
       success++;
 
     } catch (error) {
       failure++;
-      console.error("❌ Failed trainee:", row.employee_id, error.message);
+      console.error("❌ Failed trainee:", error.message);
     }
-  } //end of for loop
+  }
 
   res.json({
     message: "Trainee sync completed",
