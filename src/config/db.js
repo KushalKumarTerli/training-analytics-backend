@@ -15,28 +15,28 @@ const schemaPath = path.join(__dirname, "../../db/schema.sql");
 
 
 // Create DB connection (file auto-created if missing)
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-        console.error("❌ Failed to connect to SQLite DB:", err.message);
-    } else {
-        console.log("✅ Connected to SQLite DB");
-    }
-});
-
-
-
-// Initialize schema
-const initDB = () => {
-    const schema = fs.readFileSync(schemaPath, "utf8");
-
-    db.exec(schema, (err) => {
+    const db = new sqlite3.Database(dbPath, (err) => {
         if (err) {
-            console.error("❌ Failed to initialize DB schema:", err.message);
+            console.error("❌ Failed to connect to SQLite DB:", err.message);
         } else {
-            console.log("✅ Database schema initialized");
+            console.log("✅ Connected to SQLite DB");
         }
     });
-};
+
+
+
+    // Initialize schema
+    const initDB = () => {
+        const schema = fs.readFileSync(schemaPath, "utf8");
+
+        db.exec(schema, (err) => {
+            if (err) {
+                console.error("❌ Failed to initialize DB schema:", err.message);
+            } else {
+                console.log("✅ Database schema initialized");
+            }
+        });
+    };
 
 
 

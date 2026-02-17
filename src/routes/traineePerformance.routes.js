@@ -38,6 +38,7 @@ router.post("/", async (req, res) => {
 
       // STEP 1: Map sheet headers → DB column names
       const mappedRow = transformRow(row, traineePerformanceMapping);
+     console.log("Mapped Performance Row:", mappedRow);
 
       if (!mappedRow.employee_id) {
         failure++;
